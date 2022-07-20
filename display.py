@@ -9,6 +9,7 @@ from datetime import datetime
 import os
 
 
+BASE_DIR='/home/pi/src/robot/'
 
 con = sqlite3.connect('data.db')
 cur = con.cursor()
@@ -23,9 +24,9 @@ oled.show()
 image = Image.new("1", (oled.width, oled.height))
 draw = ImageDraw.Draw(image)
 
-small_font = ImageFont.truetype("/usr/share/fonts/truetype/piboto/Piboto-Light.ttf", 9)
-main_font = ImageFont.truetype("/usr/share/fonts/truetype/piboto/Piboto-Light.ttf", 17)
-symbols_font = ImageFont.truetype("HoloLens_MDL2_Assets.ttf", 17)
+small_font = ImageFont.truetype(f"{BASE_DIR}fonts/Piboto-Light.ttf", 9)
+main_font = ImageFont.truetype(f"{BASE_DIR}fonts/Piboto-Light.ttf", 17)
+symbols_font = ImageFont.truetype(f"{BASE_DIR}fonts/HoloLens_MDL2_Assets.ttf", 17)
 
 
 
