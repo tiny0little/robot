@@ -27,7 +27,7 @@ draw = ImageDraw.Draw(image)
 
 tiny_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Regular.ttf", 10)
 small_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Regular.ttf", 13)
-symbols_font = ImageFont.truetype(f"{BASE_DIR}fonts/Segoe_MDL2_Assets.ttf", 31)
+symbols_font = ImageFont.truetype(f"{BASE_DIR}fonts/Segoe_MDL2_Assets.ttf", 21)
 
 
 
@@ -57,56 +57,62 @@ print(f"batt[{batt_capacity:n}%]")
 
 if batt_charging:
   if batt_capacity > 90:
-    batt_display = '\ue862'
+    batt_display = '\uebb5'
   elif batt_capacity > 80:
-    batt_display = '\ue861'
+    batt_display = '\uebb4'
   elif batt_capacity > 70:
-    batt_display = '\ue860'
+    batt_display = '\uebb3'
   elif batt_capacity > 60:
-    batt_display = '\ue85f'
+    batt_display = '\uebb2'
   elif batt_capacity > 50:
-    batt_display = '\ue85e'
+    batt_display = '\uebb1'
   elif batt_capacity > 40:
-    batt_display = '\ue85d'
+    batt_display = '\uebb0'
   elif batt_capacity > 30:
-    batt_display = '\ue85c'
+    batt_display = '\uebaf'
   elif batt_capacity > 20:
-    batt_display = '\ue85b'
+    batt_display = '\uebae'
+  elif batt_capacity > 10:
+    batt_display = '\uebad'
   else:
-    batt_display = '\ue85a'
+    batt_display = '\uebab'
 else:
   if batt_capacity > 90:
-    batt_display = '\ue859'
+    batt_display = '\uebaa'
   elif batt_capacity > 80:
-    batt_display = '\ue858'
+    batt_display = '\ueba9'
   elif batt_capacity > 70:
-    batt_display = '\ue857'
+    batt_display = '\ueba8'
   elif batt_capacity > 60:
-    batt_display = '\ue856'
+    batt_display = '\ueba7'
   elif batt_capacity > 50:
-    batt_display = '\ue855'
+    batt_display = '\ueba6'
   elif batt_capacity > 40:
-    batt_display = '\ue854'
+    batt_display = '\ueba5'
   elif batt_capacity > 30:
-    batt_display = '\ue853'
+    batt_display = '\ueba4'
   elif batt_capacity > 20:
-    batt_display = '\ue852'
+    batt_display = '\ueba3'
+  elif batt_capacity > 10:
+    batt_display = '\ueba2'
   else:
     batt_display = '\ue850'
 
 
 
 draw.text((95, 50), current_time, font=small_font, fill=255)
-draw.text((100, -9), batt_display, font=symbols_font, fill=255)
+draw.text((98, 0), batt_display, font=symbols_font, fill=255)
 #draw.text((83, 2), f"{batt_capacity:n}%", font=tiny_font, fill=255)
 
 draw.text((0, 0), "\ue9ca", font=symbols_font, fill=255)
-draw.text((23, 0), f"{temperature:n}C", font=small_font, fill=255)
-draw.text((23, 13), f"{humidity:n}%", font=small_font, fill=255)
+draw.text((17, -4), f"{temperature:n}C", font=small_font, fill=255)
+draw.text((17, 7), f"{humidity:n}%", font=small_font, fill=255)
 
-draw.text((0, 33),"\ue950", font=symbols_font, fill=255)
-draw.text((33, 33), f"{cpu_temperature:n}C", font=small_font, fill=255)
-draw.text((33, 45), f"{load1:.2f}", font=small_font, fill=255)
+draw.text((0, 25),"\ue950", font=symbols_font, fill=255)
+draw.text((24, 22), f"{cpu_temperature:n}C", font=small_font, fill=255)
+draw.text((24, 34), f"{load1:.2f}", font=small_font, fill=255)
+
+draw.text((0, 48),"\ue7b7", font=symbols_font, fill=255)
 
 
 oled.image(image)
