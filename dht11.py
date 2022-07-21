@@ -11,7 +11,7 @@ cur = con.cursor()
 dhtDevice = adafruit_dht.DHT11(board.D4, use_pulseio=False)
 
 try:
-  print(f"{dhtDevice.temperature:.1f}C / {dhtDevice.humidity}%")
+  print(f"dht[{dhtDevice.temperature:.1f}C {dhtDevice.humidity}%]")
 
   print('updating DB ...')
   cur.execute("DELETE FROM sensors WHERE name='temperature'")

@@ -21,10 +21,10 @@ batt_current = ina_batt.current()
 batt_power = ina_batt.power()
 if batt_current>0:
   batt_charging=1
-  print("Battery charging")
+  print("Battery is charging")
 else:
   batt_charging=0
-  print("Battery not charging")
+  print("Battery is not charging")
 
 print("Batteries Voltage: %.2fV" % batt_voltage)
 
