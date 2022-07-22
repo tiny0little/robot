@@ -15,6 +15,8 @@ echo
 echo
 echo sleeping 30 sec
 sleep 30
+echo
+
 
 ./hmc5883l.py
 echo

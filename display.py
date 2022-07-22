@@ -12,7 +12,7 @@ import subprocess
 
 BASE_DIR='/home/pi/src/robot/'
 
-con = sqlite3.connect('data.db')
+con = sqlite3.connect(f'{BASE_DIR}data.db')
 cur = con.cursor()
 
 i2c = board.I2C()
@@ -27,8 +27,8 @@ draw = ImageDraw.Draw(image)
 
 tiny_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Regular.ttf", 10)
 small_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Regular.ttf", 13)
-symbols_font = ImageFont.truetype(f"{BASE_DIR}fonts/Segoe_MDL2_Assets.ttf", 21)
-
+segoe_symbols_font_21 = ImageFont.truetype(f"{BASE_DIR}fonts/Segoe_MDL2_Assets.ttf", 21)
+hololens_symbols_font_21 = ImageFont.truetype(f"{BASE_DIR}fonts/HoloLens_MDL2_Assets.ttf", 21)
 
 
 
@@ -39,6 +39,19 @@ load1, load5, load15 = os.getloadavg()
 
 cpu_temperature=int(subprocess.getoutput("cat /sys/class/thermal/thermal_zone0/temp | awk '{ printf(\"%d\",$1/1000) }'"))
 print(f"cpu[{cpu_temperature:n}C]")
+
+wifi_signal_level=int(subprocess.getoutput("/usr/sbin/iwconfig wlan0 | grep Signal").split('level=-')[1].split('dBm')[0].strip())
+print(f"wifi[{wifi_signal_level:n}dBm]")
+
+if wifi_signal_level>67:
+  wifi_signal_display='\uec3d'
+elif wifi_signal_level>57:
+  wifi_signal_display='\uec3e'
+elif wifi_signal_level>47:
+  wifi_signal_display='\uec3f'
+else:
+  wifi_signal_display='\uec3f'
+
 
 cur.execute('SELECT value FROM sensors WHERE name="temperature"')
 temperature = cur.fetchall()[0][0]
@@ -99,20 +112,27 @@ else:
     batt_display = '\ue850'
 
 
+cur.execute('SELECT value FROM sensors WHERE name="heading"')
+heading_angle = cur.fetchall()[0][0]
+print(f"heading[{heading_angle:n}°]")
 
-draw.text((95, 50), current_time, font=small_font, fill=255)
-draw.text((98, 0), batt_display, font=symbols_font, fill=255)
-#draw.text((83, 2), f"{batt_capacity:n}%", font=tiny_font, fill=255)
 
-draw.text((0, 0), "\ue9ca", font=symbols_font, fill=255)
-draw.text((17, -4), f"{temperature:n}C", font=small_font, fill=255)
-draw.text((17, 7), f"{humidity:n}%", font=small_font, fill=255)
+draw.text((0, 50), current_time, font=small_font, fill=255)
+draw.text((98, 0), batt_display, font=segoe_symbols_font_21, fill=255)
+draw.text((109, 19), wifi_signal_display, font=segoe_symbols_font_21, fill=255)
 
-draw.text((0, 25),"\ue950", font=symbols_font, fill=255)
+
+draw.text((0, 0), "\ue9ca", font=segoe_symbols_font_21, fill=255)
+draw.text((17, -2), f"{temperature:n}C", font=small_font, fill=255)
+draw.text((17, 8), f"{humidity:n}%", font=small_font, fill=255)
+
+draw.text((0, 25),"\ue950", font=segoe_symbols_font_21, fill=255)
 draw.text((24, 22), f"{cpu_temperature:n}C", font=small_font, fill=255)
 draw.text((24, 34), f"{load1:.2f}", font=small_font, fill=255)
 
-draw.text((0, 48),"\ue7b7", font=symbols_font, fill=255)
+draw.text((43, 0),"\ue942", font=hololens_symbols_font_21, fill=255)
+draw.text((65, 1), f"{heading_angle:n}°", font=small_font, fill=255)
+
 
 
 oled.image(image)

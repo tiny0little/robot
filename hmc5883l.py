@@ -46,7 +46,7 @@ if (heading < 0):
   heading = heading + 2*pi
 
 heading_angle = int(heading * 180/pi)
-print(f"heading angle[{heading_angle}]")
+print(f"heading angle[{heading_angle}°]")
 
 
 
@@ -56,6 +56,8 @@ cur = con.cursor()
 print('updating DB ...')
 cur.execute("DELETE FROM sensors WHERE name='heading'")
 cur.execute(f"INSERT INTO sensors VALUES ('heading',{heading_angle})")
+con.commit()
+
 con.close()
 
 
