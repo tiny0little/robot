@@ -19,14 +19,15 @@ i2c = board.I2C()
 oled = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c, addr=0x3C)
 
 oled.fill(0)
-oled.show()
+#oled.show()
 
 # Create blank image for drawing.
 image = Image.new("1", (oled.width, oled.height))
 draw = ImageDraw.Draw(image)
 
-tiny_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Regular.ttf", 10)
+tiny_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Light.ttf", 10)
 small_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Regular.ttf", 13)
+normal_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Bold.ttf", 17)
 segoe_symbols_font_21 = ImageFont.truetype(f"{BASE_DIR}fonts/Segoe_MDL2_Assets.ttf", 21)
 hololens_symbols_font_21 = ImageFont.truetype(f"{BASE_DIR}fonts/HoloLens_MDL2_Assets.ttf", 21)
 
@@ -41,14 +42,19 @@ cpu_temperature=int(subprocess.getoutput("cat /sys/class/thermal/thermal_zone0/t
 print(f"cpu[{cpu_temperature:n}C]")
 
 wifi_signal_level=int(subprocess.getoutput("/usr/sbin/iwconfig wlan0 | grep Signal").split('level=-')[1].split('dBm')[0].strip())
-print(f"wifi[{wifi_signal_level:n}dBm]")
+wifi_freq=int(subprocess.getoutput("/usr/sbin/iwconfig wlan0 | grep Frequency").split('Frequency:')[1].split('GHz')[0].split('.')[0].strip())
+if wifi_freq == 2:
+  wifi_freq = 2.4
+print(f"wifi[{wifi_signal_level:n}dBm {wifi_freq:n}GHz]")
+
+
 
 if wifi_signal_level>67:
+  wifi_signal_display='\uec3c'
+elif wifi_signal_level>57 and wifi_signal_level<=67:
   wifi_signal_display='\uec3d'
-elif wifi_signal_level>57:
+elif wifi_signal_level>47 and wifi_signal_level<=57:
   wifi_signal_display='\uec3e'
-elif wifi_signal_level>47:
-  wifi_signal_display='\uec3f'
 else:
   wifi_signal_display='\uec3f'
 
@@ -117,9 +123,11 @@ heading_angle = cur.fetchall()[0][0]
 print(f"heading[{heading_angle:n}°]")
 
 
-draw.text((0, 50), current_time, font=small_font, fill=255)
+draw.text((0, 46), current_time, font=normal_font, fill=255)
 draw.text((98, 0), batt_display, font=segoe_symbols_font_21, fill=255)
-draw.text((109, 19), wifi_signal_display, font=segoe_symbols_font_21, fill=255)
+draw.text((109, 33), wifi_signal_display, font=segoe_symbols_font_21, fill=255)
+(font_width, font_height) = tiny_font.getsize(f"{wifi_freq:n}G")
+draw.text((129-font_width, 50), f"{wifi_freq:n}G", font=tiny_font, fill=255)
 
 
 draw.text((0, 0), "\ue9ca", font=segoe_symbols_font_21, fill=255)
