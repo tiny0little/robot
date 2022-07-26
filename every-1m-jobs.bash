@@ -11,6 +11,8 @@ do
   echo
   ./ups.py
   echo
+  ./hc-sr04.py
+  echo
   ./display.py
 
   echo

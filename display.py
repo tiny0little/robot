@@ -25,9 +25,9 @@ oled.fill(0)
 image = Image.new("1", (oled.width, oled.height))
 draw = ImageDraw.Draw(image)
 
-tiny_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Light.ttf", 10)
-small_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Regular.ttf", 13)
-normal_font = ImageFont.truetype(f"{BASE_DIR}fonts/Quicksand-Bold.ttf", 17)
+tiny_font = ImageFont.truetype(f"{BASE_DIR}fonts/Piboto-Light.ttf", 9)
+small_font = ImageFont.truetype(f"{BASE_DIR}fonts/Piboto-Light.ttf", 13)
+normal_font = ImageFont.truetype(f"{BASE_DIR}fonts/Piboto-Bold.ttf", 17)
 segoe_symbols_font_21 = ImageFont.truetype(f"{BASE_DIR}fonts/Segoe_MDL2_Assets.ttf", 21)
 hololens_symbols_font_21 = ImageFont.truetype(f"{BASE_DIR}fonts/HoloLens_MDL2_Assets.ttf", 21)
 
@@ -72,7 +72,11 @@ cur.execute('SELECT value FROM sensors WHERE name="batt_capacity"')
 batt_capacity = cur.fetchall()[0][0]
 cur.execute('SELECT value FROM sensors WHERE name="batt_charging"')
 batt_charging = cur.fetchall()[0][0]
-print(f"batt[{batt_capacity:n}%]")
+cur.execute('SELECT value FROM sensors WHERE name="supply_power"')
+supply_power = cur.fetchall()[0][0]
+print(f"batt[{batt_capacity:n}% {supply_power:.1f}W]")
+
+
 
 if batt_charging:
   if batt_capacity > 90:
@@ -123,15 +127,29 @@ heading_angle = cur.fetchall()[0][0]
 print(f"heading[{heading_angle:n}°]")
 
 
+cur.execute('SELECT value FROM sensors WHERE name="distance"')
+distance = cur.fetchall()[0][0]
+print(f"distance[{distance:.0f}cm]")
+
+
+
 draw.text((0, 46), current_time, font=normal_font, fill=255)
+
+
 draw.text((98, 0), batt_display, font=segoe_symbols_font_21, fill=255)
+tmp0=f"{batt_capacity:n}% {supply_power:.0f}W"
+(font_width, font_height) = tiny_font.getsize(tmp0)
+draw.text((128-font_width, 16), tmp0, font=tiny_font, fill=255)
+
+
 draw.text((109, 33), wifi_signal_display, font=segoe_symbols_font_21, fill=255)
-(font_width, font_height) = tiny_font.getsize(f"{wifi_freq:n}G")
-draw.text((129-font_width, 50), f"{wifi_freq:n}G", font=tiny_font, fill=255)
+tmp0=f"{wifi_freq:n}G"
+(font_width, font_height) = tiny_font.getsize(tmp0)
+draw.text((129-font_width, 50), tmp0, font=tiny_font, fill=255)
 
 
 draw.text((0, 0), "\ue9ca", font=segoe_symbols_font_21, fill=255)
-draw.text((17, -2), f"{temperature:n}C", font=small_font, fill=255)
+draw.text((17, -3), f"{temperature:n}C", font=small_font, fill=255)
 draw.text((17, 8), f"{humidity:n}%", font=small_font, fill=255)
 
 draw.text((0, 25),"\ue950", font=segoe_symbols_font_21, fill=255)
@@ -139,8 +157,12 @@ draw.text((24, 22), f"{cpu_temperature:n}C", font=small_font, fill=255)
 draw.text((24, 34), f"{load1:.2f}", font=small_font, fill=255)
 
 draw.text((43, 0),"\ue942", font=hololens_symbols_font_21, fill=255)
-draw.text((65, 1), f"{heading_angle:n}°", font=small_font, fill=255)
+draw.text((65, 0), f"{heading_angle:n}°", font=small_font, fill=255)
 
+draw.text((55, 22),"\ue95a", font=segoe_symbols_font_21, fill=255)
+tmp0=f"{distance:.0f}cm"
+(font_width, font_height) = tiny_font.getsize(tmp0)
+draw.text((79-font_width, 39), tmp0, font=tiny_font, fill=255)
 
 
 oled.image(image)

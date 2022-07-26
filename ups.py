@@ -14,6 +14,11 @@ SAMPLE_TIME = 2
 
 
 
+ina_supply = INA219(0.00725, busnum=DEVICE_BUS, address=0x40)
+ina_supply.configure()
+supply_power = ina_supply.power() / 1000
+
+
 ina_batt = INA219(0.005, busnum=DEVICE_BUS, address=0x45)
 ina_batt.configure()
 batt_voltage = ina_batt.voltage()
@@ -27,6 +32,7 @@ else:
   print("Battery is not charging")
 
 print("Batteries Voltage: %.2fV" % batt_voltage)
+print(f"Current power consumption: {supply_power:.1f}W")
 
 
 bus = smbus2.SMBus(DEVICE_BUS)
@@ -46,6 +52,8 @@ print('updating DB ...')
 
 cur.execute("DELETE FROM sensors WHERE name='batt_voltage'")
 cur.execute(f"INSERT INTO sensors VALUES ('batt_voltage',{batt_voltage})")
+cur.execute("DELETE FROM sensors WHERE name='supply_power'")
+cur.execute(f"INSERT INTO sensors VALUES ('supply_power',{supply_power})")
 cur.execute("DELETE FROM sensors WHERE name='batt_charging'")
 cur.execute(f"INSERT INTO sensors VALUES ('batt_charging',{batt_charging})")
 cur.execute("DELETE FROM sensors WHERE name='batt_capacity'")
