@@ -14,6 +14,7 @@ do
   ./hc-sr04.py
   echo
   ./display.py
+  mv robot-screen.png /var/www/html/
 
   echo
   echo sleeping for 8 sec
